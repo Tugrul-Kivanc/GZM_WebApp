@@ -1,0 +1,71 @@
+﻿@model IEnumerable<DatabaseModel.Models.Perfume>
+
+@{
+    ViewData["Title"] = "Parfümler";
+}
+
+<h1>Parfümler</h1>
+
+<p>
+    <a asp-action="Create">Yeni Parfüm Ekle</a>
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Id")
+            </th>
+            <th>
+                @Html.DisplayName("Kod")
+            </th>
+            <th>
+                @Html.DisplayName("Marka")
+            </th>
+            <th>
+                @Html.DisplayName("Tip")
+            </th>
+            <th>
+                @Html.DisplayName("Koku")
+            </th>
+            <th>
+                @Html.DisplayName("Hava")
+            </th>
+            <th>
+                @Html.DisplayName("Cinsiyet")
+            </th>
+            <th>
+                @Html.DisplayName("Not")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.PerfumeId">@Html.DisplayFor(modelItem => item.PerfumeId)</a>
+            </td>
+            <td>
+                <a href="@item.Link" target="_blank" rel="noopener noreferrer">@item.Code</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Smell)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Weather)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
