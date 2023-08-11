@@ -23,6 +23,8 @@ public partial class Perfume
 
     public string? Link { get; set; }
 
+    public int Sillage { get; set; }
+
     public virtual ICollection<Equalivent> Equalivents { get; set; } = new List<Equalivent>();
 
     public virtual PerfumeProduct? PerfumeProduct { get; set; }

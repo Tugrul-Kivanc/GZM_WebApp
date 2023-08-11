@@ -34,6 +34,9 @@
                 @Html.DisplayName("Cinsiyet")
             </th>
             <th>
+                @Html.DisplayName("Silaj")
+            </th>
+            <th>
                 @Html.DisplayName("Not")
             </th>
         </tr>
@@ -42,7 +45,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                    <a asp-action="Edit" asp-route-id="@item.PerfumeId">@Html.DisplayFor(modelItem => item.PerfumeId)</a>
+                <a asp-action="Edit" asp-route-id="@item.PerfumeId">@Html.DisplayFor(modelItem => item.PerfumeId)</a>
             </td>
             <td>
                 <a href="@item.Link" target="_blank" rel="noopener noreferrer">@item.Code</a>
@@ -61,6 +64,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sillage)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)

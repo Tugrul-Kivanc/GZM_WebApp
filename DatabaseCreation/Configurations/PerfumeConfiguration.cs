@@ -49,6 +49,9 @@ namespace DatabaseCreation.Configurations
 
             builder.Property(a => a.Link)
                 .HasDefaultValue("");
+
+            builder.Property(a => a.Sillage)
+                .HasDefaultValue(0);
         }
     }
 }

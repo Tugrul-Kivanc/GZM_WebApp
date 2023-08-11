@@ -14,6 +14,7 @@ namespace DatabaseCreation
         public string Type { get; set; } = null!;
         public string Smell { get; set; } = null!;
         public string Gender { get; set; } = null!;
+        public int Sillage { get; set; } = 0;
         public string? Weather { get; set; }
         public string? Description { get; set; }
         public string? Link { get; set; }

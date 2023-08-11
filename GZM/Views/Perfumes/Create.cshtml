@@ -28,12 +28,16 @@
                 <input asp-for="Smell" class="form-control"/>
             </div>
             <div class="form-group">
+                <label asp-for="Weather" class="control-label">Hava</label>
+                <select asp-for="Weather" class="form-control" asp-items="@ViewBag.Weathers"></select>
+            </div>
+            <div class="form-group">
                 <label asp-for="Gender" class="control-label">Cinsiyet</label>
                 <select asp-for="Gender" class="form-control" asp-items="@ViewBag.Genders"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Weather" class="control-label">Hava</label>
-                <select asp-for="Weather" class="form-control" asp-items="@ViewBag.Weathers"></select>
+                <label asp-for="Sillage" class="control-label">Silaj</label>
+                <input asp-for="Sillage" class="form-control" />
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label">Not</label>
