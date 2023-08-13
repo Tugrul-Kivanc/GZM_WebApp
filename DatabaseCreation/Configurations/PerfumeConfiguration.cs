@@ -12,8 +12,9 @@ namespace DatabaseCreation.Configurations
     {
         public void Configure(EntityTypeBuilder<Perfume> builder)
         {
-            builder.HasMany(a => a.Notes)
-                .WithMany(b => b.Perfumes);
+            builder.HasOne(a => a.Product)
+                .WithOne(b => b.Perfume)
+                .IsRequired(false);
 
             builder.Property(a => a.Code)
                 .IsRequired()
@@ -44,7 +45,7 @@ namespace DatabaseCreation.Configurations
                 .HasDefaultValue("")
                 .HasMaxLength(10);
 
-            builder.Property(a => a.Description)
+            builder.Property(a => a.Info)
                 .HasDefaultValue("");
 
             builder.Property(a => a.Link)

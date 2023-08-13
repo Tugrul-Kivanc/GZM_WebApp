@@ -10,8 +10,9 @@ namespace DatabaseCreation
     {
         public int NoteId { get; set; }
         public string Name { get; set; } = null!;
-        public int AccordId { get; set; }
-        public Accord Accord { get; set; } = null!;
-        public ICollection<Perfume> Perfumes { get; set; } = new List<Perfume>();
+
+        public ICollection<TopNotes> PerfumeTopNotes { get; set; }
+        public ICollection<MidNotes> PerfumeMidNotes { get; set; }
+        public ICollection<BaseNotes> PerfumeBaseNotes { get; set; }
     }
 }

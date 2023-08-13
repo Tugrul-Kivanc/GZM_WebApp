@@ -12,9 +12,6 @@ namespace DatabaseCreation.Configurations
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
-            builder.HasMany(a => a.Products)
-                .WithMany(b => b.Orders);
-
             builder.Property(a => a.Quantity)
                 .IsRequired()
                 .HasDefaultValue(0);

@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace DatabaseCreation
 {
-    public class Accord
+    public class Category
     {
-        public int AccordId { get; set; }
+        public int CategoryId { get; set; }
         public string Name { get; set; } = null!;
-        public ICollection<Note> Notes { get; set; } = new List<Note>();
+        public int Price { get; set; }
+
+        public ICollection<Product> Products { get; set; }
     }
 }

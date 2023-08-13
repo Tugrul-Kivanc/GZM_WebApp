@@ -9,11 +9,12 @@ namespace DatabaseCreation
     public class Order
     {
         public int OrderId { get; set; }
-        public DateTime OrderDate { get; set; }
-        public ICollection<Product> Products { get; set; } = new List<Product>();
         public int Quantity { get; set; }
         public int Fee { get; set; }
         public string Payment { get; set; } = null!;
+        public DateTime OrderDate { get; set; }
         public string? Description { get; set; }
+
+        public ICollection<ProductOrder> ProductOrders { get; set; }
     }
 }

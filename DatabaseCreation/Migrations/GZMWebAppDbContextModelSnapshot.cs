@@ -22,24 +22,44 @@ namespace DatabaseCreation.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DatabaseCreation.Accord", b =>
+            modelBuilder.Entity("DatabaseCreation.BaseNotes", b =>
                 {
-                    b.Property<int>("AccordId")
+                    b.Property<int>("PerfumeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NoteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PerfumeId", "NoteId");
+
+                    b.HasIndex("NoteId");
+
+                    b.ToTable("BaseNotes");
+                });
+
+            modelBuilder.Entity("DatabaseCreation.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccordId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("Akor Yok");
+                        .HasDefaultValue("Varsayılan Kategori");
 
-                    b.HasKey("AccordId");
+                    b.Property<int>("Price")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
-                    b.ToTable("Accord");
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("DatabaseCreation.Equalivent", b =>
@@ -92,6 +112,21 @@ namespace DatabaseCreation.Migrations
                     b.ToTable("EqualiventBrand");
                 });
 
+            modelBuilder.Entity("DatabaseCreation.MidNotes", b =>
+                {
+                    b.Property<int>("PerfumeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NoteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PerfumeId", "NoteId");
+
+                    b.HasIndex("NoteId");
+
+                    b.ToTable("MidNotes");
+                });
+
             modelBuilder.Entity("DatabaseCreation.Note", b =>
                 {
                     b.Property<int>("NoteId")
@@ -99,9 +134,6 @@ namespace DatabaseCreation.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NoteId"));
-
-                    b.Property<int>("AccordId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -111,8 +143,6 @@ namespace DatabaseCreation.Migrations
                         .HasDefaultValue("?");
 
                     b.HasKey("NoteId");
-
-                    b.HasIndex("AccordId");
 
                     b.ToTable("Note");
                 });
@@ -177,11 +207,6 @@ namespace DatabaseCreation.Migrations
                         .HasColumnType("nvarchar(10)")
                         .HasDefaultValue("");
 
-                    b.Property<string>("Description")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("");
-
                     b.Property<string>("Gender")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -189,10 +214,18 @@ namespace DatabaseCreation.Migrations
                         .HasColumnType("nvarchar(10)")
                         .HasDefaultValue("Unisex");
 
+                    b.Property<string>("Info")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("");
+
                     b.Property<string>("Link")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Sillage")
                         .ValueGeneratedOnAdd()
@@ -224,22 +257,6 @@ namespace DatabaseCreation.Migrations
                     b.ToTable("Perfume");
                 });
 
-            modelBuilder.Entity("DatabaseCreation.PerfumeProduct", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PerfumeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId", "PerfumeId");
-
-                    b.HasIndex("PerfumeId")
-                        .IsUnique();
-
-                    b.ToTable("PerfumeProduct");
-                });
-
             modelBuilder.Entity("DatabaseCreation.Product", b =>
                 {
                     b.Property<int>("ProductId")
@@ -248,6 +265,9 @@ namespace DatabaseCreation.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -255,10 +275,8 @@ namespace DatabaseCreation.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasDefaultValue("Varsayılan Ürün");
 
-                    b.Property<int>("Price")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                    b.Property<int?>("PerfumeId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Stock")
                         .ValueGeneratedOnAdd()
@@ -270,46 +288,64 @@ namespace DatabaseCreation.Migrations
                         .HasColumnType("bigint")
                         .HasDefaultValue(0L);
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("Varsayılan Ürün Tipi");
-
                     b.HasKey("ProductId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("PerfumeId")
+                        .IsUnique()
+                        .HasFilter("[PerfumeId] IS NOT NULL");
 
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("NotePerfume", b =>
+            modelBuilder.Entity("DatabaseCreation.ProductOrder", b =>
                 {
-                    b.Property<int>("NotesNoteId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PerfumesPerfumeId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.HasKey("NotesNoteId", "PerfumesPerfumeId");
+                    b.HasKey("ProductId", "OrderId");
 
-                    b.HasIndex("PerfumesPerfumeId");
+                    b.HasIndex("OrderId");
 
-                    b.ToTable("NotePerfume");
+                    b.ToTable("ProductOrder");
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
+            modelBuilder.Entity("DatabaseCreation.TopNotes", b =>
                 {
-                    b.Property<int>("OrdersOrderId")
+                    b.Property<int>("PerfumeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductsProductId")
+                    b.Property<int>("NoteId")
                         .HasColumnType("int");
 
-                    b.HasKey("OrdersOrderId", "ProductsProductId");
+                    b.HasKey("PerfumeId", "NoteId");
 
-                    b.HasIndex("ProductsProductId");
+                    b.HasIndex("NoteId");
 
-                    b.ToTable("OrderProduct");
+                    b.ToTable("TopNotes");
+                });
+
+            modelBuilder.Entity("DatabaseCreation.BaseNotes", b =>
+                {
+                    b.HasOne("DatabaseCreation.Note", "Note")
+                        .WithMany("PerfumeBaseNotes")
+                        .HasForeignKey("NoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatabaseCreation.Perfume", "Perfume")
+                        .WithMany("BaseNotes")
+                        .HasForeignKey("PerfumeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Note");
+
+                    b.Navigation("Perfume");
                 });
 
             modelBuilder.Entity("DatabaseCreation.Equalivent", b =>
@@ -331,69 +367,83 @@ namespace DatabaseCreation.Migrations
                     b.Navigation("Perfume");
                 });
 
-            modelBuilder.Entity("DatabaseCreation.Note", b =>
+            modelBuilder.Entity("DatabaseCreation.MidNotes", b =>
                 {
-                    b.HasOne("DatabaseCreation.Accord", "Accord")
-                        .WithMany("Notes")
-                        .HasForeignKey("AccordId")
+                    b.HasOne("DatabaseCreation.Note", "Note")
+                        .WithMany("PerfumeMidNotes")
+                        .HasForeignKey("NoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatabaseCreation.Perfume", "Perfume")
+                        .WithMany("MidNotes")
+                        .HasForeignKey("PerfumeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Note");
+
+                    b.Navigation("Perfume");
+                });
+
+            modelBuilder.Entity("DatabaseCreation.Product", b =>
+                {
+                    b.HasOne("DatabaseCreation.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Accord");
-                });
-
-            modelBuilder.Entity("DatabaseCreation.PerfumeProduct", b =>
-                {
                     b.HasOne("DatabaseCreation.Perfume", "Perfume")
                         .WithOne("Product")
-                        .HasForeignKey("DatabaseCreation.PerfumeProduct", "PerfumeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("DatabaseCreation.Product", "PerfumeId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Perfume");
+                });
+
+            modelBuilder.Entity("DatabaseCreation.ProductOrder", b =>
+                {
+                    b.HasOne("DatabaseCreation.Order", "Order")
+                        .WithMany("ProductOrders")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DatabaseCreation.Product", "Product")
-                        .WithMany()
+                        .WithMany("ProductOrders")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Perfume");
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("NotePerfume", b =>
+            modelBuilder.Entity("DatabaseCreation.TopNotes", b =>
                 {
-                    b.HasOne("DatabaseCreation.Note", null)
-                        .WithMany()
-                        .HasForeignKey("NotesNoteId")
+                    b.HasOne("DatabaseCreation.Note", "Note")
+                        .WithMany("PerfumeTopNotes")
+                        .HasForeignKey("NoteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DatabaseCreation.Perfume", null)
-                        .WithMany()
-                        .HasForeignKey("PerfumesPerfumeId")
+                    b.HasOne("DatabaseCreation.Perfume", "Perfume")
+                        .WithMany("TopNotes")
+                        .HasForeignKey("PerfumeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Note");
+
+                    b.Navigation("Perfume");
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
+            modelBuilder.Entity("DatabaseCreation.Category", b =>
                 {
-                    b.HasOne("DatabaseCreation.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DatabaseCreation.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DatabaseCreation.Accord", b =>
-                {
-                    b.Navigation("Notes");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("DatabaseCreation.EqualiventBrand", b =>
@@ -401,12 +451,36 @@ namespace DatabaseCreation.Migrations
                     b.Navigation("Equalivents");
                 });
 
+            modelBuilder.Entity("DatabaseCreation.Note", b =>
+                {
+                    b.Navigation("PerfumeBaseNotes");
+
+                    b.Navigation("PerfumeMidNotes");
+
+                    b.Navigation("PerfumeTopNotes");
+                });
+
+            modelBuilder.Entity("DatabaseCreation.Order", b =>
+                {
+                    b.Navigation("ProductOrders");
+                });
+
             modelBuilder.Entity("DatabaseCreation.Perfume", b =>
                 {
+                    b.Navigation("BaseNotes");
+
                     b.Navigation("Equalivents");
 
-                    b.Navigation("Product")
-                        .IsRequired();
+                    b.Navigation("MidNotes");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("TopNotes");
+                });
+
+            modelBuilder.Entity("DatabaseCreation.Product", b =>
+                {
+                    b.Navigation("ProductOrders");
                 });
 #pragma warning restore 612, 618
         }

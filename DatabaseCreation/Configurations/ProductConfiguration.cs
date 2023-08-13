@@ -12,6 +12,10 @@ namespace DatabaseCreation.Configurations
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
+            builder.HasOne(a => a.Perfume)
+                .WithOne(b => b.Product)
+                .HasForeignKey<Product>(c => c.PerfumeId);
+
             builder.Property(a => a.Name)
                 .IsRequired()
                 .HasDefaultValue("Varsayılan Ürün")
@@ -21,18 +25,9 @@ namespace DatabaseCreation.Configurations
                 .IsRequired()
                 .HasDefaultValue(0);
 
-            builder.Property(a => a.Price)
-                .IsRequired()
-                .HasDefaultValue(0);
-
             builder.Property(a => a.TotalSales)
                 .IsRequired()
                 .HasDefaultValue(0);
-
-            builder.Property(a => a.Type)
-                .IsRequired()
-                .HasDefaultValue("Varsayılan Ürün Tipi")
-                .HasMaxLength(50);
         }
     }
 }

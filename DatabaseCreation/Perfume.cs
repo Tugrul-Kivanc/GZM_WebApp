@@ -9,18 +9,20 @@ namespace DatabaseCreation
     public class Perfume
     {
         public int PerfumeId { get; set; }
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
         public string Code { get; set; } = null!;
         public string Brand { get; set; } = null!;
         public string Type { get; set; } = null!;
         public string Smell { get; set; } = null!;
         public string Gender { get; set; } = null!;
-        public int Sillage { get; set; } = 0;
+        public ICollection<TopNotes> TopNotes { get; set; }
+        public ICollection<MidNotes> MidNotes { get; set; }
+        public ICollection<BaseNotes> BaseNotes { get; set; }
+        public int Sillage { get; set; }
+        public string? Info { get; set; }
         public string? Weather { get; set; }
-        public string? Description { get; set; }
         public string? Link { get; set; }
-        public PerfumeProduct Product { get; set; } = null!;
-        public ICollection<Note> Notes { get; set; } = new List<Note>();
-        public ICollection<Equalivent> Equalivents { get; set; } = new List<Equalivent>();
-
+        public ICollection<Equalivent> Equalivents { get; set; }
     }
 }

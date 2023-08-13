@@ -10,10 +10,15 @@ namespace DatabaseCreation
     {
         public int ProductId { get; set; }
         public string Name { get; set; } = null!;
-        public string Type { get; set; } = null!;
         public int Stock { get; set; }
-        public int Price { get; set; }
         public long TotalSales { get; set; }
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
+
+        public int CategoryId { get; set; }
+        public Category Category { get; set; } = null!;
+
+        public int? PerfumeId { get; set; } = null;
+        public Perfume? Perfume { get; set; } = null;
+
+        public ICollection<ProductOrder> ProductOrders { get; set; }
     }
 }

@@ -8,14 +8,11 @@ using System.Threading.Tasks;
 
 namespace DatabaseCreation.Configurations
 {
-    internal class NoteConfiguration : IEntityTypeConfiguration<Note>
+    internal class TopNotesConfiguration : IEntityTypeConfiguration<TopNotes>
     {
-        public void Configure(EntityTypeBuilder<Note> builder)
+        public void Configure(EntityTypeBuilder<TopNotes> builder)
         {
-            builder.Property(a => a.Name)
-                .IsRequired()
-                .HasDefaultValue("?")
-                .HasMaxLength(50);
+            builder.HasKey(a => new { a.PerfumeId, a.NoteId });
         }
     }
 }

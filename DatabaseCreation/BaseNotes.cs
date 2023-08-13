@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace DatabaseCreation
 {
-    public class PerfumeProduct
+    public class BaseNotes
     {
         public int PerfumeId { get; set; }
-        public int ProductId { get; set; }
-        public Perfume Perfume { get; set; } = null!;
-        public Product Product { get; set; } = null!;
+        public Perfume Perfume { get; set; }
+
+        public int NoteId { get; set; }
+        public Note Note { get; set; }
     }
 }

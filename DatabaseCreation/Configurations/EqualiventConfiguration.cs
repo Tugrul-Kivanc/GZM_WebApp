@@ -15,6 +15,7 @@ namespace DatabaseCreation.Configurations
             builder.HasOne(a => a.Perfume)
                 .WithMany(b => b.Equalivents)
                 .HasForeignKey(c => c.PerfumeId)
+                .HasPrincipalKey(d => d.PerfumeId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Property(a => a.Code)
