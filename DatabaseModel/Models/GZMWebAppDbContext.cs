@@ -4,18 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseModel.Models;
 
-public partial class GZMWebAppDbContext : DbContext
+public partial class GzmdatabaseContext : DbContext
 {
-    public GZMWebAppDbContext()
+    public GzmdatabaseContext()
     {
     }
 
-    public GZMWebAppDbContext(DbContextOptions<GZMWebAppDbContext> options)
+    public GzmdatabaseContext(DbContextOptions<GzmdatabaseContext> options)
         : base(options)
     {
     }
 
-    public virtual DbSet<Accord> Accords { get; set; }
+    public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<Equalivent> Equalivents { get; set; }
 
@@ -27,22 +27,21 @@ public partial class GZMWebAppDbContext : DbContext
 
     public virtual DbSet<Perfume> Perfumes { get; set; }
 
-    public virtual DbSet<PerfumeProduct> PerfumeProducts { get; set; }
-
     public virtual DbSet<Product> Products { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=.;Database=GZMWebAppDb;Trusted_Connection=True;Encrypt=False");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=.;Database=GZMDatabase;Trusted_Connection=True;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Accord>(entity =>
+        modelBuilder.Entity<Category>(entity =>
         {
-            entity.ToTable("Accord");
+            entity.ToTable("Category");
 
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
-                .HasDefaultValueSql("(N'Akor Yok')");
+                .HasDefaultValueSql("(N'Varsayılan Kategori')");
         });
 
         modelBuilder.Entity<Equalivent>(entity =>
@@ -79,27 +78,9 @@ public partial class GZMWebAppDbContext : DbContext
         {
             entity.ToTable("Note");
 
-            entity.HasIndex(e => e.AccordId, "IX_Note_AccordId");
-
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("(N'?')");
-
-            entity.HasOne(d => d.Accord).WithMany(p => p.Notes)
-                .HasForeignKey(d => d.AccordId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
-            entity.HasMany(d => d.PerfumesPerfumes).WithMany(p => p.NotesNotes)
-                .UsingEntity<Dictionary<string, object>>(
-                    "NotePerfume",
-                    r => r.HasOne<Perfume>().WithMany().HasForeignKey("PerfumesPerfumeId"),
-                    l => l.HasOne<Note>().WithMany().HasForeignKey("NotesNoteId"),
-                    j =>
-                    {
-                        j.HasKey("NotesNoteId", "PerfumesPerfumeId");
-                        j.ToTable("NotePerfume");
-                        j.HasIndex(new[] { "PerfumesPerfumeId" }, "IX_NotePerfume_PerfumesPerfumeId");
-                    });
         });
 
         modelBuilder.Entity<Order>(entity =>
@@ -110,18 +91,6 @@ public partial class GZMWebAppDbContext : DbContext
             entity.Property(e => e.Payment)
                 .HasMaxLength(10)
                 .HasDefaultValueSql("(N'Nakit')");
-
-            entity.HasMany(d => d.ProductsProducts).WithMany(p => p.OrdersOrders)
-                .UsingEntity<Dictionary<string, object>>(
-                    "OrderProduct",
-                    r => r.HasOne<Product>().WithMany().HasForeignKey("ProductsProductId"),
-                    l => l.HasOne<Order>().WithMany().HasForeignKey("OrdersOrderId"),
-                    j =>
-                    {
-                        j.HasKey("OrdersOrderId", "ProductsProductId");
-                        j.ToTable("OrderProduct");
-                        j.HasIndex(new[] { "ProductsProductId" }, "IX_OrderProduct_ProductsProductId");
-                    });
         });
 
         modelBuilder.Entity<Perfume>(entity =>
@@ -134,10 +103,10 @@ public partial class GZMWebAppDbContext : DbContext
             entity.Property(e => e.Code)
                 .HasMaxLength(10)
                 .HasDefaultValueSql("(N'')");
-            entity.Property(e => e.Description).HasDefaultValueSql("(N'')");
             entity.Property(e => e.Gender)
                 .HasMaxLength(10)
                 .HasDefaultValueSql("(N'Unisex')");
+            entity.Property(e => e.Info).HasDefaultValueSql("(N'')");
             entity.Property(e => e.Link).HasDefaultValueSql("(N'')");
             entity.Property(e => e.Smell)
                 .HasMaxLength(50)
@@ -148,32 +117,80 @@ public partial class GZMWebAppDbContext : DbContext
             entity.Property(e => e.Weather)
                 .HasMaxLength(10)
                 .HasDefaultValueSql("(N'')");
-        });
 
-        modelBuilder.Entity<PerfumeProduct>(entity =>
-        {
-            entity.HasKey(e => new { e.ProductId, e.PerfumeId });
+            entity.HasMany(d => d.Notes).WithMany(p => p.Perfumes)
+                .UsingEntity<Dictionary<string, object>>(
+                    "BaseNote",
+                    r => r.HasOne<Note>().WithMany().HasForeignKey("NoteId"),
+                    l => l.HasOne<Perfume>().WithMany().HasForeignKey("PerfumeId"),
+                    j =>
+                    {
+                        j.HasKey("PerfumeId", "NoteId");
+                        j.ToTable("BaseNotes");
+                        j.HasIndex(new[] { "NoteId" }, "IX_BaseNotes_NoteId");
+                    });
 
-            entity.ToTable("PerfumeProduct");
+            entity.HasMany(d => d.Notes1).WithMany(p => p.Perfumes1)
+                .UsingEntity<Dictionary<string, object>>(
+                    "TopNote",
+                    r => r.HasOne<Note>().WithMany().HasForeignKey("NoteId"),
+                    l => l.HasOne<Perfume>().WithMany().HasForeignKey("PerfumeId"),
+                    j =>
+                    {
+                        j.HasKey("PerfumeId", "NoteId");
+                        j.ToTable("TopNotes");
+                        j.HasIndex(new[] { "NoteId" }, "IX_TopNotes_NoteId");
+                    });
 
-            entity.HasIndex(e => e.PerfumeId, "IX_PerfumeProduct_PerfumeId").IsUnique();
-
-            entity.HasOne(d => d.Perfume).WithOne(p => p.PerfumeProduct).HasForeignKey<PerfumeProduct>(d => d.PerfumeId);
-
-            entity.HasOne(d => d.Product).WithMany(p => p.PerfumeProducts).HasForeignKey(d => d.ProductId);
+            entity.HasMany(d => d.NotesNavigation).WithMany(p => p.PerfumesNavigation)
+                .UsingEntity<Dictionary<string, object>>(
+                    "MidNote",
+                    r => r.HasOne<Note>().WithMany().HasForeignKey("NoteId"),
+                    l => l.HasOne<Perfume>().WithMany().HasForeignKey("PerfumeId"),
+                    j =>
+                    {
+                        j.HasKey("PerfumeId", "NoteId");
+                        j.ToTable("MidNotes");
+                        j.HasIndex(new[] { "NoteId" }, "IX_MidNotes_NoteId");
+                    });
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
             entity.ToTable("Product");
 
+            entity.HasIndex(e => e.CategoryId, "IX_Product_CategoryId");
+
+            entity.HasIndex(e => e.PerfumeId, "IX_Product_PerfumeId")
+                .IsUnique()
+                .HasFilter("([PerfumeId] IS NOT NULL)");
+
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("(N'Varsayılan Ürün')");
             entity.Property(e => e.TotalSales).HasDefaultValueSql("(CONVERT([bigint],(0)))");
-            entity.Property(e => e.Type)
-                .HasMaxLength(50)
-                .HasDefaultValueSql("(N'Varsayılan Ürün Tipi')");
+
+            entity.HasOne(d => d.Category).WithMany(p => p.Products)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Perfume).WithOne(p => p.Product).HasForeignKey<Product>(d => d.PerfumeId);
+
+            entity.HasMany(d => d.Orders).WithMany(p => p.Products)
+                .UsingEntity<Dictionary<string, object>>(
+                    "ProductOrder",
+                    r => r.HasOne<Order>().WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    l => l.HasOne<Product>().WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    j =>
+                    {
+                        j.HasKey("ProductId", "OrderId");
+                        j.ToTable("ProductOrder");
+                        j.HasIndex(new[] { "OrderId" }, "IX_ProductOrder_OrderId");
+                    });
         });
 
         OnModelCreatingPartial(modelBuilder);

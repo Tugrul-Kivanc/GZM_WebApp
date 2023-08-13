@@ -11,13 +11,15 @@ public partial class Product
 
     public int Stock { get; set; }
 
-    public int Price { get; set; }
-
     public long TotalSales { get; set; }
 
-    public string Type { get; set; } = null!;
+    public int CategoryId { get; set; }
 
-    public virtual ICollection<PerfumeProduct> PerfumeProducts { get; set; } = new List<PerfumeProduct>();
+    public int? PerfumeId { get; set; }
 
-    public virtual ICollection<Order> OrdersOrders { get; set; } = new List<Order>();
+    public virtual Category Category { get; set; } = null!;
+
+    public virtual Perfume? Perfume { get; set; }
+
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }
