@@ -14,15 +14,5 @@ namespace GZM.Controllers
         {
             return View();
         }
-
-        public IActionResult Order()
-        {
-            return View();
-        }
-
-        public IActionResult ListPerfumes()
-        {
-            return View();
-        }
     }
 }

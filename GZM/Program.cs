@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<GZMWebAppDbContext>(
+builder.Services.AddDbContext<GzmdatabaseContext>(
     a => a.UseSqlServer("Server=.;Database=GZMWebAppDb;Trusted_Connection=True;Encrypt=False"));
 
 var app = builder.Build();
