@@ -1,0 +1,84 @@
+﻿@model IEnumerable<DatabaseModel.Models.Perfume>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Id")
+            </th>
+            <th>
+                @Html.DisplayName("Kod")
+            </th>
+            <th>
+                @Html.DisplayName("Marka")
+            </th>
+            <th>
+                @Html.DisplayName("Tip")
+            </th>
+            <th>
+                @Html.DisplayName("Koku")
+            </th>
+            <th>
+                @Html.DisplayName("Cinsiyet")
+            </th>
+            <th>
+                @Html.DisplayName("Silaj")
+            </th>
+            <th>
+                @Html.DisplayName("Not")
+            </th>
+            <th>
+                @Html.DisplayName("Hava")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.PerfumeId">@item.ProductId</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @if(!String.IsNullOrEmpty(item.Link))
+                {
+                    <a href="@item.Link" target="_blank" rel="noopener noreferrer">@item.Type</a>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Type)
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Smell)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sillage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Info)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Weather)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

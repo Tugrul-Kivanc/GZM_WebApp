@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<GzmdatabaseContext>(
-    a => a.UseSqlServer("Server=.;Database=GZMWebAppDb;Trusted_Connection=True;Encrypt=False"));
+    a => a.UseSqlServer("Server=.;Database=GZMDatabase;Trusted_Connection=True;Encrypt=False"));
 
 var app = builder.Build();
 
@@ -22,6 +22,6 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Perfumes}/{action=Index}/{id?}");
+    pattern: "{controller=Perfume}/{action=Index}/{id?}");
 
 app.Run();
