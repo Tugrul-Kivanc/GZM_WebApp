@@ -1,7 +1,7 @@
 ﻿using DatabaseModel.Models;
 using Microsoft.EntityFrameworkCore;
 
-var context = new GZMWebAppDbContext();
+var context = new GzmdatabaseContext();
 
 #region Add Perfumes as Products
 /*
