@@ -1,35 +1,73 @@
 ﻿@model DatabaseModel.Models.Perfume
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Parfüm Ekle";
 }
 
-<h1>Create</h1>
-
-<h4>Perfume</h4>
+<h1>Parfüm Ekle</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ProductId" class="control-label"></label>
+                <label asp-for="ProductId" class="control-label">Ürün Id</label>
                 <input asp-for="ProductId" class="form-control" />
                 <span asp-validation-for="ProductId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Sillage" class="control-label"></label>
+                <label asp-for="Code" class="control-label">Kod</label>
+                <input asp-for="Code" class="form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Brand" class="control-label">Marka</label>
+                <input asp-for="Brand" class="form-control" />
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Type" class="control-label">Tip</label>
+                <input asp-for="Type" class="form-control" />
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Smell" class="control-label">Koku</label>
+                <input asp-for="Smell" class="form-control" />
+                <span asp-validation-for="Smell" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Weather" class="control-label">Hava</label>
+                <select asp-for="Weather" class="form-control" asp-items="ViewBag.Weathers"></select>
+                <span asp-validation-for="Weather" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gender" class="control-label">Cinsiyet</label>
+                <select asp-for="Gender" class="form-control" asp-items="ViewBag.Genders"></select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sillage" class="control-label">Silaj</label>
                 <input asp-for="Sillage" class="form-control" />
                 <span asp-validation-for="Sillage" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="Info" class="control-label">Bilgi</label>
+                <input asp-for="Info" class="form-control" />
+                <span asp-validation-for="Info" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Link" class="control-label">Link</label>
+                <input asp-for="Link" class="form-control" />
+                <span asp-validation-for="Link" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Ekle" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<hr />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Geri</a>
 </div>
 
