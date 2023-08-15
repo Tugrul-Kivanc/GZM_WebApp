@@ -10,15 +10,8 @@ using GZM.ViewModels;
 
 namespace GZM.Controllers
 {
-    public class OrderController : Controller
+    public class OrderController : ControllerBase
     {
-        private readonly GzmdatabaseContext _context;
-
-        public OrderController(GzmdatabaseContext context)
-        {
-            _context = context;
-        }
-
         // GET: Order
         public async Task<IActionResult> Index()
         {

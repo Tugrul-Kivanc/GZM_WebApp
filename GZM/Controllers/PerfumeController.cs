@@ -9,15 +9,8 @@ using DatabaseModel.Models;
 
 namespace GZM.Controllers
 {
-    public class PerfumeController : Controller
+    public class PerfumeController : ControllerBase
     {
-        private readonly GzmdatabaseContext _context;
-
-        public PerfumeController(GzmdatabaseContext context)
-        {
-            _context = context;
-        }
-
         // GET: Perfume
         public async Task<IActionResult> Index()
         {

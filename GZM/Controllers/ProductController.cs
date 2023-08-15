@@ -9,15 +9,8 @@ using DatabaseModel.Models;
 
 namespace GZM.Controllers
 {
-    public class ProductController : Controller
+    public class ProductController : ControllerBase
     {
-        private readonly GzmdatabaseContext _context;
-
-        public ProductController(GzmdatabaseContext context)
-        {
-            _context = context;
-        }
-
         // GET: Product
         public async Task<IActionResult> Index()
         {
