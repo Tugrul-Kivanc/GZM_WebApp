@@ -47,6 +47,8 @@ namespace GZM.Controllers
         // GET: Perfume/Create
         public IActionResult Create()
         {
+            CreateGenderViewData();
+            CreateWeatherViewData();
             return View();
         }
 
@@ -63,6 +65,8 @@ namespace GZM.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            CreateGenderViewData();
+            CreateWeatherViewData();
             return View(perfume);
         }
 
@@ -79,6 +83,8 @@ namespace GZM.Controllers
             {
                 return NotFound();
             }
+            CreateGenderViewData();
+            CreateWeatherViewData();
             return View(perfume);
         }
 
@@ -112,6 +118,8 @@ namespace GZM.Controllers
                         throw;
                     }
                 }
+                CreateGenderViewData();
+                CreateWeatherViewData();
                 return RedirectToAction(nameof(Index));
             }
             return View(perfume);
@@ -157,6 +165,32 @@ namespace GZM.Controllers
         private bool PerfumeExists(int id)
         {
           return (_context.Perfumes?.Any(e => e.PerfumeId == id)).GetValueOrDefault();
+        }
+
+        private void CreateWeatherViewData()
+        {
+            var weatherTypes = new List<string>() { "Genel", "Soğuk", "Sıcak" };
+
+            List<SelectListItem> weatherSelectList = new List<SelectListItem>();
+            foreach (var item in weatherTypes)
+            {
+                weatherSelectList.Add(new SelectListItem() { Text = item, Value = item });
+            }
+
+            ViewData["Weathers"] = weatherSelectList;
+        }
+
+        private void CreateGenderViewData()
+        {
+            var genderTypes = new List<string>() { "Unisex", "Erkek", "Kadın" };
+
+            List<SelectListItem> genderSelectList = new List<SelectListItem>();
+            foreach (var item in genderTypes)
+            {
+                genderSelectList.Add(new SelectListItem() { Text = item, Value = item });
+            }
+
+            ViewData["Genders"] = genderSelectList;
         }
     }
 }
