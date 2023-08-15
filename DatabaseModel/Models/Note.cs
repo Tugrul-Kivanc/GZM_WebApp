@@ -9,6 +9,10 @@ public partial class Note
 
     public string Name { get; set; } = null!;
 
+    public int AccordId { get; set; }
+
+    public virtual Accord Accord { get; set; } = null!;
+
     public virtual ICollection<Perfume> Perfumes { get; set; } = new List<Perfume>();
 
     public virtual ICollection<Perfume> Perfumes1 { get; set; } = new List<Perfume>();

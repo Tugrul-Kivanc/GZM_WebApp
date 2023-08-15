@@ -15,6 +15,8 @@ public partial class GzmdatabaseContext : DbContext
     {
     }
 
+    public virtual DbSet<Accord> Accords { get; set; }
+
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<Equalivent> Equalivents { get; set; }
@@ -35,6 +37,16 @@ public partial class GzmdatabaseContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Accord>(entity =>
+        {
+            entity.ToTable("Accord");
+
+            entity.Property(e => e.Description).HasDefaultValueSql("(N'')");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("(N'Varsayılan Akor')");
+        });
+
         modelBuilder.Entity<Category>(entity =>
         {
             entity.ToTable("Category");
@@ -78,9 +90,15 @@ public partial class GzmdatabaseContext : DbContext
         {
             entity.ToTable("Note");
 
+            entity.HasIndex(e => e.AccordId, "IX_Note_AccordId");
+
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("(N'?')");
+
+            entity.HasOne(d => d.Accord).WithMany(p => p.Notes)
+                .HasForeignKey(d => d.AccordId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<Order>(entity =>
