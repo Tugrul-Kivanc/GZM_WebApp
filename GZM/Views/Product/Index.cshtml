@@ -1,0 +1,54 @@
+﻿@model IEnumerable<DatabaseModel.Models.Product>
+
+@{
+    ViewData["Title"] = "Ürünler";
+}
+
+<h1>Ürünler</h1>
+
+<p>
+    <a asp-action="Create">Yeni Ürün Ekle</a>
+</p>
+<table class="table table-bordered"> @*TODO optionally display full name of perfumes*@
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Id")
+            </th>
+            <th>
+                @Html.DisplayName("Ürün")
+            </th>
+            <th>
+                @Html.DisplayName("Stok")
+            </th>
+            <th>
+                @Html.DisplayName("Satış")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductId</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name) |
+                @if(item.Perfume != null)
+                {
+                        @Html.DisplayFor(modelItem => item.Perfume.Brand)
+                        <text>&nbsp;</text>
+                        @Html.DisplayFor(modelItem => item.Perfume.Type)
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stock)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalSales)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
