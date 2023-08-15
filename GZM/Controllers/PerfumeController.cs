@@ -26,24 +26,6 @@ namespace GZM.Controllers
                           Problem("Entity set 'GzmdatabaseContext.Perfumes'  is null.");
         }
 
-        // GET: Perfume/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Perfumes == null)
-            {
-                return NotFound();
-            }
-
-            var perfume = await _context.Perfumes
-                .FirstOrDefaultAsync(m => m.PerfumeId == id);
-            if (perfume == null)
-            {
-                return NotFound();
-            }
-
-            return View(perfume);
-        }
-
         // GET: Perfume/Create
         public IActionResult Create()
         {
