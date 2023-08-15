@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DatabaseModel.Models;
+using GZM.ViewModels;
 
 namespace GZM.Controllers
 {
@@ -47,6 +48,7 @@ namespace GZM.Controllers
         // GET: Order/Create
         public IActionResult Create()
         {
+            CreatePaymentViewData();
             return View();
         }
 
@@ -55,7 +57,7 @@ namespace GZM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,Quantity,Fee,Payment,OrderDate,Description")] Order order)
+        public async Task<IActionResult> Create([Bind("OrderDate,Products,Quantity,Fee,Payment,Description")] CreateOrderViewModel order)
         {
             if (ModelState.IsValid)
             {
@@ -63,6 +65,7 @@ namespace GZM.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            CreatePaymentViewData();
             return View(order);
         }
 
@@ -157,6 +160,19 @@ namespace GZM.Controllers
         private bool OrderExists(int id)
         {
           return (_context.Orders?.Any(e => e.OrderId == id)).GetValueOrDefault();
+        }
+
+        private void CreatePaymentViewData()
+        {
+            var paymentTypes = new List<string>() { "Nakit", "Kart", "Havale", "Hediye" };
+
+            List<SelectListItem> paymentSelectList = new List<SelectListItem>();
+            foreach (var item in paymentTypes)
+            {
+                paymentSelectList.Add(new SelectListItem() { Text = item, Value = item });
+            }
+
+            ViewData["PaymentTypes"] = paymentSelectList;
         }
     }
 }
