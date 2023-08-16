@@ -13,21 +13,23 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+                @Html.DisplayName("Tarih")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Fee)
+                @Html.DisplayName("Ürünler")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Payment)
+                @Html.DisplayName("Adet")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
+                @Html.DisplayName("Ücret")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayName("Ödeme")
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayName("Not")
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -49,9 +51,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                    @Html.DisplayFor(modelItem => item.Description)
             </td>
         </tr>
 }

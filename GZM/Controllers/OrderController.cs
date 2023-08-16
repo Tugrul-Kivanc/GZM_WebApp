@@ -50,11 +50,25 @@ namespace GZM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderDate,Products,Quantity,Fee,Payment,Description")] CreateOrderViewModel order)
+        public async Task<IActionResult> Create([Bind("OrderDate,Products,Quantity,Fee,Payment,Description")] OrderViewModel order)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(order);
+                Order orderToAdd = new Order()
+                {
+                    Description = order.Description,
+                    Fee = order.Fee,
+                    OrderDate = order.OrderDate,
+                    Quantity = order.Quantity,
+                    Payment = order.Payment,
+                    Products = order.Products
+                };
+                foreach (var product in order.Products)
+                {
+                    var x = _context.Products.Where(a => a.ProductId == product.ProductId).First();
+                    x.Orders.Add(orderToAdd);
+                }
+                _context.Add(orderToAdd);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

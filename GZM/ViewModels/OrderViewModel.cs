@@ -2,7 +2,7 @@
 
 namespace GZM.ViewModels
 {
-    public class CreateOrderViewModel
+    public class OrderViewModel
     {
         public DateTime OrderDate { get; set; } = DateTime.Now;
         public List<Product> Products { get; set; }

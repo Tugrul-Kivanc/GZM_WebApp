@@ -191,6 +191,16 @@ Console.WriteLine(result);
 
 #endregion
 
+#region Accessing Many to Many middle table
+
+//var products = context.Orders.Where(o => o.OrderId == 1).SelectMany(b => b.Products).ToList();
+
+//foreach (var product in products)
+//{
+//    Console.WriteLine(product.Name);
+//}
+
+#endregion
 
 Console.WriteLine("End of Execution");
 Console.ReadKey();
