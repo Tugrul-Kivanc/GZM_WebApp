@@ -24,7 +24,6 @@
             <th>
                 @Html.DisplayName("Satış")
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -34,9 +33,10 @@
                 <a asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductId</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Name) |
+                @Html.DisplayFor(modelItem => item.Name)
                 @if(item.Perfume != null)
                 {
+                        <text> | </text>
                         @Html.DisplayFor(modelItem => item.Perfume.Brand)
                         <text>&nbsp;</text>
                         @Html.DisplayFor(modelItem => item.Perfume.Type)
