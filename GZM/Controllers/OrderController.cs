@@ -15,9 +15,23 @@ namespace GZM.Controllers
         // GET: Order
         public async Task<IActionResult> Index()
         {
-              return _context.Orders != null ? 
-                          View(await _context.Orders.ToListAsync()) :
-                          Problem("Entity set 'GzmdatabaseContext.Orders'  is null.");
+            if(_context.Orders == null)
+            {
+                return Problem("Entity set 'GzmdatabaseContext.Orders'  is null.");
+            }
+
+            var orders = _context.Orders.Select(a => new OrderViewModel()
+            {
+                OrderId = a.OrderId,
+                Description = a.Description,
+                Fee = a.Fee,
+                OrderDate = a.OrderDate,
+                Payment = a.Payment,
+                Products = a.Products.ToList(),
+                Quantity = a.Quantity
+            }).ToListAsync();
+
+            return View(await orders);
         }
 
         // GET: Order/Details/5
@@ -42,6 +56,7 @@ namespace GZM.Controllers
         public IActionResult Create()
         {
             CreatePaymentViewData();
+            CreateProductsViewData();
             return View();
         }
 
@@ -50,29 +65,33 @@ namespace GZM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderDate,Products,Quantity,Fee,Payment,Description")] OrderViewModel order)
+        public async Task<IActionResult> Create([Bind("OrderDate,ProductIds,Products,Quantity,Fee,Payment,Description")] OrderViewModel order)
         {
             if (ModelState.IsValid)
             {
+                var productsInOrder = new List<Product>();
+                foreach (var productId in order.ProductIds)
+                {
+                    productsInOrder.Add(_context.Products.Find(int.Parse(productId)));
+                }
+                
                 Order orderToAdd = new Order()
                 {
                     Description = order.Description,
                     Fee = order.Fee,
-                    OrderDate = order.OrderDate,
+                    //OrderDate = order.OrderDate,
+                    OrderDate = new DateTime(2023, 06, 14),
                     Quantity = order.Quantity,
                     Payment = order.Payment,
-                    Products = order.Products
+                    Products = productsInOrder
                 };
-                foreach (var product in order.Products)
-                {
-                    var x = _context.Products.Where(a => a.ProductId == product.ProductId).First();
-                    x.Orders.Add(orderToAdd);
-                }
+
                 _context.Add(orderToAdd);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             CreatePaymentViewData();
+            CreateProductsViewData();
             return View(order);
         }
 
@@ -89,7 +108,20 @@ namespace GZM.Controllers
             {
                 return NotFound();
             }
-            return View(order);
+
+            var model = new OrderViewModel()
+            {
+                OrderId = order.OrderId,
+                OrderDate = order.OrderDate,
+                Fee= order.Fee,
+                Payment = order.Payment,
+                Description = order.Description,
+                Products = order.Products.ToList(),
+                Quantity = order.Quantity
+            };
+
+            CreatePaymentViewData();
+            return View(model);
         }
 
         // POST: Order/Edit/5
@@ -124,6 +156,8 @@ namespace GZM.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            CreatePaymentViewData();
             return View(order);
         }
 
@@ -180,6 +214,19 @@ namespace GZM.Controllers
             }
 
             ViewData["PaymentTypes"] = paymentSelectList;
+        }
+
+        private void CreateProductsViewData()
+        {
+            var products = _context.Products.ToList();
+
+            List<SelectListItem> productSelectList = new List<SelectListItem>();
+            foreach (var product in products)
+            {
+                productSelectList.Add(new SelectListItem() { Text = GetFullProductName(product), Value = product.ProductId.ToString() });
+            }
+
+            ViewData["Products"] = productSelectList;
         }
     }
 }

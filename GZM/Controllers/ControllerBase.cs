@@ -11,5 +11,14 @@ namespace GZM.Controllers
         {
             _context = new GzmdatabaseContext();
         }
+        protected string GetFullProductName(Product product)
+        {
+            string productName = product.Name;
+            if (product.CategoryId == 3 || product.CategoryId == 4)
+            {
+                productName = _context.Categories.Where(a => a.CategoryId == product.CategoryId).First().Name + " " + _context.Perfumes.Where(a => a.ProductId == product.ProductId).First().Type;
+            }
+            return productName;
+        }
     }
 }

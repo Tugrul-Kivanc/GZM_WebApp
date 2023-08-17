@@ -1,12 +1,10 @@
-﻿@model DatabaseModel.Models.Order
+﻿@model OrderViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Satış Düzenle";
 }
 
-<h1>Edit</h1>
-
-<h4>Order</h4>
+<h1>Satış Düzenle</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,27 +12,27 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="OrderId" />
             <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
+                <label asp-for="OrderDate" class="control-label">Tarih</label>
+                <input asp-for="OrderDate" type="date" class="form-control" />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label">Adet</label>
                 <input asp-for="Quantity" class="form-control" />
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Fee" class="control-label"></label>
+                <label asp-for="Fee" class="control-label">Ücret</label>
                 <input asp-for="Fee" class="form-control" />
                 <span asp-validation-for="Fee" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Payment" class="control-label"></label>
-                <input asp-for="Payment" class="form-control" />
+                <label asp-for="Payment" class="control-label">Ödeme</label>
+                <select asp-for="Payment" class="form-control" asp-items="ViewBag.PaymentTypes"></select>
                 <span asp-validation-for="Payment" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="OrderDate" class="control-label"></label>
-                <input asp-for="OrderDate" class="form-control" />
-                <span asp-validation-for="OrderDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
+                <label asp-for="Description" class="control-label">Not</label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
@@ -44,8 +42,7 @@
         </form>
     </div>
 </div>
-
+<hr />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Geri</a>
 </div>
-
