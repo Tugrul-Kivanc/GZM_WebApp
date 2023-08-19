@@ -21,6 +21,10 @@ namespace DatabaseCreation.Configurations
             builder.HasOne(a => a.Order)
                 .WithMany(b => b.ProductOrders)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Property(a => a.Quantity)
+                .IsRequired()
+                .HasDefaultValue(1);
         }
     }
 }

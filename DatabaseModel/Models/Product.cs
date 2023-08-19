@@ -21,5 +21,5 @@ public partial class Product
 
     public virtual Perfume? Perfume { get; set; }
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<ProductOrder> ProductOrders { get; set; } = new List<ProductOrder>();
 }

@@ -31,6 +31,8 @@ public partial class GzmdatabaseContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
+    public virtual DbSet<ProductOrder> ProductOrders { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=.;Database=GZMDatabase;Trusted_Connection=True;Encrypt=False");
@@ -193,22 +195,25 @@ public partial class GzmdatabaseContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.Perfume).WithOne(p => p.Product).HasForeignKey<Product>(d => d.PerfumeId);
+        });
 
-            entity.HasMany(d => d.Orders).WithMany(p => p.Products)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ProductOrder",
-                    r => r.HasOne<Order>().WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.ClientSetNull),
-                    l => l.HasOne<Product>().WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.ClientSetNull),
-                    j =>
-                    {
-                        j.HasKey("ProductId", "OrderId");
-                        j.ToTable("ProductOrder");
-                        j.HasIndex(new[] { "OrderId" }, "IX_ProductOrder_OrderId");
-                    });
+        modelBuilder.Entity<ProductOrder>(entity =>
+        {
+            entity.HasKey(e => new { e.ProductId, e.OrderId });
+
+            entity.ToTable("ProductOrder");
+
+            entity.HasIndex(e => e.OrderId, "IX_ProductOrder_OrderId");
+
+            entity.Property(e => e.Quantity).HasDefaultValueSql("((1))");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.ProductOrders)
+                .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductOrders)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         OnModelCreatingPartial(modelBuilder);
