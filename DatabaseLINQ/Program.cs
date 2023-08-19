@@ -202,5 +202,10 @@ Console.WriteLine(result);
 
 #endregion
 
+#region Getting Total Quantity Sold
+//var query = context.ProductOrders.Where(o => o.ProductId == 8).Sum(b => b.Quantity);
+//Console.WriteLine(query);
+#endregion
+
 Console.WriteLine("End of Execution");
 Console.ReadKey();
