@@ -20,36 +20,18 @@ namespace GZM.Controllers
                 return Problem("Entity set 'GzmdatabaseContext.Orders'  is null.");
             }
 
-            var orders = _context.Orders.Select(a => new OrderViewModel()
+            var orders = _context.Orders.Select(a => new ListOrderViewModel()
             {
                 OrderId = a.OrderId,
                 Description = a.Description,
                 Fee = a.Fee,
                 OrderDate = a.OrderDate,
                 Payment = a.Payment,
-                Products = a.Products.ToList(),
-                Quantity = a.Quantity
-            }).ToListAsync();
+                ProductNames = _context.ProductOrders.Where(b => b.OrderId == a.OrderId).Select(c => c.Product.Name).ToList(),
+                ProductCount = a.ProductOrders.Select(b => b.Quantity).Sum()
+            }).OrderByDescending(b => b.OrderDate).OrderByDescending(c => c.OrderId).ToListAsync();
 
             return View(await orders);
-        }
-
-        // GET: Order/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Orders == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Orders
-                .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return View(order);
         }
 
         // GET: Order/Create
@@ -65,34 +47,79 @@ namespace GZM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderDate,ProductIds,Products,Quantity,Fee,Payment,Description")] OrderViewModel order)
+        public async Task<IActionResult> Create([Bind("OrderDate,ProductIds,Products,ProductCount,Fee,Payment,Description")] CreateOrderViewModel order)
         {
             if (ModelState.IsValid)
             {
-                var productsInOrder = new List<Product>();
-                foreach (var productId in order.ProductIds)
-                {
-                    productsInOrder.Add(_context.Products.Find(int.Parse(productId)));
-                }
-                
-                Order orderToAdd = new Order()
+                Order newOrder = new Order()
                 {
                     Description = order.Description,
                     Fee = order.Fee,
                     //OrderDate = order.OrderDate,
-                    OrderDate = new DateTime(2023, 06, 14),
-                    Quantity = order.Quantity,
-                    Payment = order.Payment,
-                    Products = productsInOrder
+                    OrderDate = new DateTime(2023, 06, 15),
+                    Payment = order.Payment
                 };
 
-                _context.Add(orderToAdd);
+                _context.Add(newOrder);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                foreach (var productId in order.ProductIds)
+                {
+                    var productOrder = new ProductOrder()
+                    {
+                        OrderId = newOrder.OrderId,
+                        ProductId = productId,
+                        Quantity = 1
+                    };
+                    _context.Add(productOrder);
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction(nameof(EditProductOrder), new { id = newOrder.OrderId });
             }
             CreatePaymentViewData();
             CreateProductsViewData();
             return View(order);
+        }
+
+        public async Task<IActionResult> EditProductOrder(int id)
+        {
+            if (_context.ProductOrders == null)
+            {
+                return NotFound();
+            }
+
+            var productOrders = await _context.ProductOrders.Where(a => a.OrderId == id).ToListAsync();
+
+            var productQuantities = new Dictionary<int, int>();
+
+            foreach (var item in productOrders)
+            {
+                productQuantities.Add(item.ProductId, item.Quantity);
+            }
+
+            var model = new ProductOrderViewModel()
+            {
+                OrderId= id,
+                ProductQuantities = productQuantities
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProductOrder(ProductOrderViewModel model)
+        {
+            var productOrders = _context.ProductOrders.Where(a => a.OrderId == model.OrderId).ToList();
+
+            foreach (var (productId, quantity) in model.ProductQuantities)
+            {
+                var productOrder = _context.ProductOrders.Where(a => a.OrderId == model.OrderId && a.ProductId == productId).Single();
+                productOrder.Quantity = quantity;
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Order/Edit/5
@@ -109,15 +136,15 @@ namespace GZM.Controllers
                 return NotFound();
             }
 
-            var model = new OrderViewModel()
+            var model = new ListOrderViewModel()
             {
                 OrderId = order.OrderId,
                 OrderDate = order.OrderDate,
                 Fee= order.Fee,
                 Payment = order.Payment,
                 Description = order.Description,
-                Products = order.Products.ToList(),
-                Quantity = order.Quantity
+                //Products = order.Products.ToList(),
+                //Quantity = order.Quantity
             };
 
             CreatePaymentViewData();

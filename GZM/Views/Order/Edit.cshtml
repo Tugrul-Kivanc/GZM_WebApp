@@ -1,4 +1,4 @@
-﻿@model OrderViewModel
+﻿@model ListOrderViewModel
 
 @{
     ViewData["Title"] = "Satış Düzenle";
@@ -17,9 +17,9 @@
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Quantity" class="control-label">Adet</label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
+                <label asp-for="ProductCount" class="control-label">Adet</label>
+                <input asp-for="ProductCount" class="form-control" />
+                <span asp-validation-for="ProductCount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Fee" class="control-label">Ücret</label>

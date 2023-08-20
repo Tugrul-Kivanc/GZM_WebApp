@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OrderViewModel>
+﻿@model IEnumerable<ListOrderViewModel>
 
 @{
     ViewData["Title"] = "Satışlar";
@@ -40,17 +40,17 @@
                 @item.OrderDate.ToShortDateString()
             </td>
             <td>
-                @for(int i = 0; i < item.Products.Count();i++)
+                @for(int i = 0; i < item.ProductNames.Count();i++)
                 {
-                    @item.Products[i].Name
-                    if(i != item.Products.Count() - 1)
+                    @item.ProductNames[i]
+                    if (i != item.ProductNames.Count() - 1)
                     {
                         <text>, </text>
                     }
                 }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
+                @Html.DisplayFor(modelItem => item.ProductCount)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Fee)
@@ -62,7 +62,8 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                    <a asp-action="Edit" asp-route-id="@item.OrderId">Düzenle</a>
+                    <a asp-action="Edit" asp-route-id="@item.OrderId">Satışı Düzenle</a> | 
+                    <a asp-action="EditProductOrder" asp-route-id="@item.OrderId">Ürünleri Düzenle</a>
             </td>
         </tr>
 }

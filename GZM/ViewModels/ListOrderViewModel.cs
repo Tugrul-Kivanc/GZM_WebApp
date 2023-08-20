@@ -1,14 +1,12 @@
-﻿using DatabaseModel.Models;
-
-namespace GZM.ViewModels
+﻿namespace GZM.ViewModels
 {
-    public class OrderViewModel
+    public class ListOrderViewModel
     {
         public int OrderId { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.Now;
-        public List<string> ProductIds { get; set; }
-        public List<Product>? Products { get; set; }
-        public int Quantity { get; set; }
+        public List<int> ProductIds { get; set; }
+        public List<string> ProductNames { get; set; }
+        public int ProductCount { get; set; }
         public int Fee { get; set; }
         public string Payment { get; set; } = null!;
         public string? Description { get; set; }

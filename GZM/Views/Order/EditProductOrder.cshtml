@@ -1,0 +1,32 @@
+﻿@model ProductOrderViewModel
+
+@{
+    ViewData["Title"] = "Satış Miktarı";
+}
+
+<h1>Satış Miktarını Ayarla</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditProductOrder">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="OrderId" value="@Url.ActionContext.RouteData.Values["id"]" />
+            @foreach(var keyValuePair in Model.ProductQuantities)
+            {
+                <div class="form-group">
+                    @*TODO Show product name instead of id*@
+                    <label asp-for="@Model.ProductQuantities.Keys" class="control-label">@keyValuePair.Key</label>
+                    <input asp-for="@Model.ProductQuantities[@keyValuePair.Key]" class="form-control" />
+                    <span asp-validation-for="@Model.ProductQuantities.Values" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<div>
+    <a asp-action="Index">Geri</a>
+</div>
