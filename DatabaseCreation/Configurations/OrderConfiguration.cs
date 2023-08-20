@@ -12,9 +12,9 @@ namespace DatabaseCreation.Configurations
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
-            builder.Property(a => a.Quantity)
+            builder.Property(a => a.ProductCount)
                 .IsRequired()
-                .HasDefaultValue(0);
+                .HasDefaultValue(1);
 
             builder.Property(a => a.Fee)
                 .IsRequired()

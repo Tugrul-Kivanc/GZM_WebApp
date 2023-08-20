@@ -107,6 +107,8 @@ public partial class GzmdatabaseContext : DbContext
         {
             entity.ToTable("Order");
 
+            entity.Property(e => e.ProductCount).HasDefaultValue(1);
+            entity.Property(e => e.ProductCount).HasDefaultValue(0);
             entity.Property(e => e.Description).HasDefaultValueSql("(N'')");
             entity.Property(e => e.Payment)
                 .HasMaxLength(10)

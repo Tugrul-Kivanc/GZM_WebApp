@@ -7,7 +7,7 @@ public partial class Order
 {
     public int OrderId { get; set; }
 
-    public int Quantity { get; set; }
+    public int ProductCount { get; set; }
 
     public int Fee { get; set; }
 
