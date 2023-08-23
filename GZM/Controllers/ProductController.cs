@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DatabaseModel.Models;
+using GZM.ViewModels;
 
 namespace GZM.Controllers
 {
@@ -59,7 +60,18 @@ namespace GZM.Controllers
             }
             CreateCategoryViewData(product);
             CreatePerfumeViewData(product.PerfumeId);
-            return View(product);
+
+            var model = new ProductViewModel()
+            {
+                CategoryId = product.CategoryId,
+                TotalSales = product.TotalSales,
+                Stock = product.Stock,
+                Name = product.Name,
+                PerfumeId = product.PerfumeId,
+                ProductId = product.ProductId
+            };
+
+            return View(model);
         }
 
         // POST: Product/Edit/5
@@ -67,12 +79,19 @@ namespace GZM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Stock,TotalSales,CategoryId,PerfumeId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Stock,TotalSales,CategoryId,PerfumeId")] ProductViewModel model)
         {
-            if (id != product.ProductId)
+            if (id != model.ProductId)
             {
                 return NotFound();
             }
+
+            var product = _context.Products.Find(model.ProductId);
+            product.CategoryId = model.CategoryId;
+            product.Name = model.Name;
+            product.Stock = model.Stock;
+            product.TotalSales = model.TotalSales;
+
 
             if (ModelState.IsValid)
             {
