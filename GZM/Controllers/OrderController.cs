@@ -117,10 +117,15 @@ namespace GZM.Controllers
             {
                 var productOrder = _context.ProductOrders.Where(a => a.OrderId == model.OrderId && a.ProductId == productId).Single();
                 productOrder.Quantity = quantity;
+            }
+            await _context.SaveChangesAsync();
+
+            foreach (var productId in model.ProductQuantities.Keys)
+            {
                 UpdateTotalSalesOnProduct(_context.Products.Find(productId));
             }
-
             await _context.SaveChangesAsync();
+
             CreateProductNamesViewBag(model.OrderId);
             return RedirectToAction(nameof(Index));
         }
@@ -139,15 +144,13 @@ namespace GZM.Controllers
                 return NotFound();
             }
 
-            var model = new ListOrderViewModel()
+            var model = new CreateOrderViewModel()
             {
                 OrderId = order.OrderId,
                 OrderDate = order.OrderDate,
                 Fee= order.Fee,
                 Payment = order.Payment,
                 Description = order.Description,
-                //Products = order.Products.ToList(),
-                //Quantity = order.Quantity
             };
 
             CreatePaymentViewData();
@@ -160,17 +163,46 @@ namespace GZM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,Quantity,Fee,Payment,OrderDate,Description")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductIds,Quantity,Fee,Payment,OrderDate,Description")] CreateOrderViewModel model)
         {
-            if (id != order.OrderId)
+            if (id != model.OrderId)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                var order = _context.Orders.Find(id);
                 try
                 {
+                    var initialProductOrders = _context.ProductOrders.Where(a => a.OrderId == id).ToList();
+                    foreach (var initialProductOrder in initialProductOrders)
+                    {
+                        if(!model.ProductIds.Contains(initialProductOrder.ProductId)) // Remove old productorder if its not included in the edited order
+                        {
+                            _context.ProductOrders.Remove(initialProductOrder);
+                        }
+                        else
+                        {
+                            model.ProductIds.Remove(initialProductOrder.ProductId); // Remove the productid if its not changed
+                        }
+                    }
+
+                    foreach(var productId in model.ProductIds)
+                    {
+                        _context.Add(new ProductOrder()
+                        {
+                            OrderId = id,
+                            ProductId = productId,
+                            Quantity = 1
+                        });
+                    }
+
+                    order.Payment = model.Payment;
+                    order.OrderDate = model.OrderDate;
+                    order.Fee = model.Fee;
+                    order.Description = model.Description;
+
                     _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
@@ -185,12 +217,12 @@ namespace GZM.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(EditProductOrder), new { id = id });
             }
 
             CreatePaymentViewData();
             CreateProductsViewData(id);
-            return View(order);
+            return View(model);
         }
 
         // GET: Order/Delete/5
