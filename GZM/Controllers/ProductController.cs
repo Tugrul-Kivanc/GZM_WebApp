@@ -15,8 +15,8 @@ namespace GZM.Controllers
         // GET: Product
         public async Task<IActionResult> Index()
         {
-            var gzmdatabaseContext = _context.Products.Include(p => p.Category).Include(p => p.Perfume).OrderBy(a => a.CategoryId).OrderBy(b => b.ProductId);
-            return View(await gzmdatabaseContext.ToListAsync());
+            var products = _context.Products.Include(p => p.Category).Include(p => p.Perfume).OrderBy(a => a.CategoryId).OrderBy(b => b.ProductId);
+            return View(await products.ToListAsync());
         }
 
         // GET: Product/Create
