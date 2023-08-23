@@ -1,4 +1,8 @@
-﻿@model IEnumerable<ListOrderViewModel>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+
+@model IPagedList<ListOrderViewModel>
 
 @{
     ViewData["Title"] = "Satışlar";
@@ -8,9 +12,6 @@
 
 <p>
     <a asp-action="Create">Satış Ekle</a>
-</p>
-<p>
-    Satış: @ViewBag.TotalOrders, Satılan Ürün Sayısı: @ViewBag.ItemsSold, Kazanç: @ViewBag.TotalSum
 </p>
 <table class="table table-bordered">
     <thead>
@@ -71,3 +72,8 @@
 }
     </tbody>
 </table>
+
+<link rel="stylesheet" href="~/css/pagedlist.css" asp-append-version="true" />
+@Html.PagedListPager((IPagedList)Model,
+                    page => Url.Action("Index", new {page}),
+                    new PagedListRenderOptions(){DisplayLinkToFirstPage = PagedListDisplayMode.Always})

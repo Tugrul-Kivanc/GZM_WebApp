@@ -7,28 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DatabaseModel.Models;
 using GZM.ViewModels;
+using X.PagedList;
 
 namespace GZM.Controllers
 {
     public class OrderController : ControllerBase
     {
+        private int pageSize = 20;
+
         // GET: Order
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             if(_context.Orders == null)
             {
                 return Problem("Entity set 'GzmdatabaseContext.Orders'  is null.");
             }
-
-            //TODO implement sorting/filtering
-            int totalOrders = _context.Orders.Count();
-            ViewData["TotalOrders"] = totalOrders;
-
-            long itemsSold = _context.ProductOrders.Select(a => a.Quantity).Sum();
-            ViewData["ItemsSold"] = itemsSold;
-
-            long totalSum = _context.Orders.Select(a => a.Fee).Sum();
-            ViewData["TotalSum"] = totalSum;
 
             var orders = _context.Orders.Select(a => new ListOrderViewModel()
             {
@@ -39,7 +32,7 @@ namespace GZM.Controllers
                 Payment = a.Payment,
                 ProductNames = _context.ProductOrders.Where(b => b.OrderId == a.OrderId).Select(c => c.Product.Name).ToList(),
                 ProductCount = a.ProductOrders.Select(b => b.Quantity).Sum()
-            }).OrderByDescending(b => b.OrderDate).ThenByDescending(c => c.OrderId).ToListAsync();
+            }).OrderByDescending(b => b.OrderDate).ThenByDescending(c => c.OrderId).ToPagedListAsync(page, pageSize);
 
             return View(await orders);
         }
@@ -66,7 +59,7 @@ namespace GZM.Controllers
                     Description = order.Description,
                     Fee = order.Fee,
                     //OrderDate = order.OrderDate,
-                    OrderDate = new DateTime(2023, 07, 13),
+                    OrderDate = DateTime.Now,
                     Payment = order.Payment
                 };
 
