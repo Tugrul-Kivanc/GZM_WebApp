@@ -56,7 +56,7 @@ namespace GZM.Controllers
                     Description = order.Description,
                     Fee = order.Fee,
                     //OrderDate = order.OrderDate,
-                    OrderDate = new DateTime(2023, 06, 15),
+                    OrderDate = new DateTime(2023, 06, 17),
                     Payment = order.Payment
                 };
 
@@ -104,6 +104,7 @@ namespace GZM.Controllers
                 ProductQuantities = productQuantities
             };
 
+            CreateProductNamesViewBag(id);
             return View(model);
         }
 
@@ -116,9 +117,11 @@ namespace GZM.Controllers
             {
                 var productOrder = _context.ProductOrders.Where(a => a.OrderId == model.OrderId && a.ProductId == productId).Single();
                 productOrder.Quantity = quantity;
+                _context.Products.Find(productOrder.ProductId).TotalSales += quantity;
             }
 
             await _context.SaveChangesAsync();
+            CreateProductNamesViewBag(model.OrderId);
             return RedirectToAction(nameof(Index));
         }
 
@@ -148,6 +151,7 @@ namespace GZM.Controllers
             };
 
             CreatePaymentViewData();
+            CreateProductsViewData();
             return View(model);
         }
 
@@ -185,6 +189,7 @@ namespace GZM.Controllers
             }
 
             CreatePaymentViewData();
+            CreateProductsViewData();
             return View(order);
         }
 
@@ -254,6 +259,13 @@ namespace GZM.Controllers
             }
 
             ViewData["Products"] = productSelectList;
+        }
+
+        private void CreateProductNamesViewBag(int orderId)
+        {
+            var productNames = _context.ProductOrders.Where(a => a.OrderId == orderId).Select(b => b.Product.Name).ToList();
+
+            ViewData["ProductNames"] = productNames;
         }
     }
 }

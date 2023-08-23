@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Satış Miktarı";
+    int i = 0;
 }
 
 <h1>Satış Miktarını Ayarla</h1>
@@ -15,10 +16,11 @@
             {
                 <div class="form-group">
                     @*TODO Show product name instead of id*@
-                    <label asp-for="@Model.ProductQuantities.Keys" class="control-label">@keyValuePair.Key</label>
+                    <label asp-for="@Model.ProductQuantities.Keys" class="control-label">@ViewBag.ProductNames[i]</label>
                     <input asp-for="@Model.ProductQuantities[@keyValuePair.Key]" class="form-control" />
                     <span asp-validation-for="@Model.ProductQuantities.Values" class="text-danger"></span>
                 </div>
+                i++;
             }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
