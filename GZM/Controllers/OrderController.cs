@@ -117,7 +117,7 @@ namespace GZM.Controllers
             {
                 var productOrder = _context.ProductOrders.Where(a => a.OrderId == model.OrderId && a.ProductId == productId).Single();
                 productOrder.Quantity = quantity;
-                _context.Products.Find(productOrder.ProductId).TotalSales += quantity;
+                UpdateTotalSalesOnProduct(_context.Products.Find(productId));
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +151,7 @@ namespace GZM.Controllers
             };
 
             CreatePaymentViewData();
-            CreateProductsViewData();
+            CreateProductsViewData(id);
             return View(model);
         }
 
@@ -189,7 +189,7 @@ namespace GZM.Controllers
             }
 
             CreatePaymentViewData();
-            CreateProductsViewData();
+            CreateProductsViewData(id);
             return View(order);
         }
 
@@ -248,14 +248,21 @@ namespace GZM.Controllers
             ViewData["PaymentTypes"] = paymentSelectList;
         }
 
-        private void CreateProductsViewData()
+        private void CreateProductsViewData(int? orderId = null)
         {
             var products = _context.Products.ToList();
+            var selectedProducts = new List<Product>();
+            if(orderId != null)
+            {
+                selectedProducts = _context.ProductOrders.Where(a => a.OrderId == orderId).Select(b => b.Product).ToList();
+            }
 
             List<SelectListItem> productSelectList = new List<SelectListItem>();
             foreach (var product in products)
             {
-                productSelectList.Add(new SelectListItem() { Text = GetFullProductName(product), Value = product.ProductId.ToString() });
+                var isSelected = selectedProducts.Contains(product);
+
+                productSelectList.Add(new SelectListItem() { Text = GetFullProductName(product), Value = product.ProductId.ToString(), Selected = isSelected });
             }
 
             ViewData["Products"] = productSelectList;
@@ -266,6 +273,13 @@ namespace GZM.Controllers
             var productNames = _context.ProductOrders.Where(a => a.OrderId == orderId).Select(b => b.Product.Name).ToList();
 
             ViewData["ProductNames"] = productNames;
+        }
+
+        private void UpdateTotalSalesOnProduct(Product product)
+        {
+            int totalSales = _context.ProductOrders.Where(a => a.ProductId == product.ProductId).Select(b => b.Quantity).Sum();
+            product.TotalSales = totalSales;
+            _context.Update(product);
         }
     }
 }
