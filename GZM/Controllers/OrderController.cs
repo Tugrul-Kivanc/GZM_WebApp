@@ -20,6 +20,16 @@ namespace GZM.Controllers
                 return Problem("Entity set 'GzmdatabaseContext.Orders'  is null.");
             }
 
+            //TODO implement sorting/filtering
+            int totalOrders = _context.Orders.Count();
+            ViewData["TotalOrders"] = totalOrders;
+
+            long itemsSold = _context.ProductOrders.Select(a => a.Quantity).Sum();
+            ViewData["ItemsSold"] = itemsSold;
+
+            long totalSum = _context.Orders.Select(a => a.Fee).Sum();
+            ViewData["TotalSum"] = totalSum;
+
             var orders = _context.Orders.Select(a => new ListOrderViewModel()
             {
                 OrderId = a.OrderId,
@@ -29,7 +39,7 @@ namespace GZM.Controllers
                 Payment = a.Payment,
                 ProductNames = _context.ProductOrders.Where(b => b.OrderId == a.OrderId).Select(c => c.Product.Name).ToList(),
                 ProductCount = a.ProductOrders.Select(b => b.Quantity).Sum()
-            }).OrderByDescending(b => b.OrderDate).OrderByDescending(c => c.OrderId).ToListAsync();
+            }).OrderByDescending(b => b.OrderDate).ThenByDescending(c => c.OrderId).ToListAsync();
 
             return View(await orders);
         }
@@ -56,7 +66,7 @@ namespace GZM.Controllers
                     Description = order.Description,
                     Fee = order.Fee,
                     //OrderDate = order.OrderDate,
-                    OrderDate = new DateTime(2023, 06, 17),
+                    OrderDate = new DateTime(2023, 07, 13),
                     Payment = order.Payment
                 };
 
@@ -181,6 +191,8 @@ namespace GZM.Controllers
                         if(!model.ProductIds.Contains(initialProductOrder.ProductId)) // Remove old productorder if its not included in the edited order
                         {
                             _context.ProductOrders.Remove(initialProductOrder);
+                            await _context.SaveChangesAsync();
+                            UpdateTotalSalesOnProduct(_context.Products.Find(initialProductOrder.ProductId));
                         }
                         else
                         {
@@ -188,7 +200,7 @@ namespace GZM.Controllers
                         }
                     }
 
-                    foreach(var productId in model.ProductIds)
+                    foreach (var productId in model.ProductIds) // Add new products
                     {
                         _context.Add(new ProductOrder()
                         {
