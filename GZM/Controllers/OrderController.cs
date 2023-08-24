@@ -125,7 +125,8 @@ namespace GZM.Controllers
 
             foreach (var productId in model.ProductQuantities.Keys)
             {
-                UpdateTotalSalesOnProduct(_context.Products.Find(productId));
+                var product = _context.Products.Find(productId);
+                UpdateProductSalesAndStock(product);
             }
             await _context.SaveChangesAsync();
 
@@ -185,7 +186,7 @@ namespace GZM.Controllers
                         {
                             _context.ProductOrders.Remove(initialProductOrder);
                             await _context.SaveChangesAsync();
-                            UpdateTotalSalesOnProduct(_context.Products.Find(initialProductOrder.ProductId));
+                            UpdateProductSalesAndStock(_context.Products.Find(initialProductOrder.ProductId));
                         }
                         else
                         {
@@ -312,9 +313,10 @@ namespace GZM.Controllers
             ViewData["ProductNames"] = productNames;
         }
 
-        private void UpdateTotalSalesOnProduct(Product product)
+        private void UpdateProductSalesAndStock(Product product)
         {
             int totalSales = _context.ProductOrders.Where(a => a.ProductId == product.ProductId).Select(b => b.Quantity).Sum();
+            product.Stock -= totalSales - (int)product.TotalSales;
             product.TotalSales = totalSales;
             _context.Update(product);
         }
