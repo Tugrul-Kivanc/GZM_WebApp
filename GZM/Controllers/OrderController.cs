@@ -13,7 +13,7 @@ namespace GZM.Controllers
 {
     public class OrderController : ControllerBase
     {
-        private int pageSize = 20;
+        private int pageSize = 50;
 
         // GET: Order
         public async Task<IActionResult> Index(int page = 1)
@@ -22,6 +22,12 @@ namespace GZM.Controllers
             {
                 return Problem("Entity set 'GzmdatabaseContext.Orders'  is null.");
             }
+
+            ViewData["Date"] = DateTime.Now.Date.ToShortDateString();
+            ViewData["Nakit"] = _context.Orders.Where(a => a.OrderDate.Date == DateTime.Today.Date && a.Payment == "Nakit").Sum(b => b.Fee);
+            ViewData["Kart"] = _context.Orders.Where(a => a.OrderDate.Date == DateTime.Today.Date && a.Payment == "Kart").Sum(b => b.Fee);
+            ViewData["Havale"] = _context.Orders.Where(a => a.OrderDate.Date == DateTime.Today.Date && a.Payment == "Havale").Sum(b => b.Fee);
+            ViewData["Toplam"] = _context.Orders.Where(a => a.OrderDate.Date == DateTime.Today.Date).Sum(b => b.Fee);
 
             var orders = _context.Orders.Select(a => new ListOrderViewModel()
             {

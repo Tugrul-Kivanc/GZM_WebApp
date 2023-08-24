@@ -13,12 +13,33 @@
 <p>
     <a asp-action="Create">Satış Ekle</a>
 </p>
+<p>
+    Tarih: @ViewBag.Date
+</p>
+@if (@ViewBag.Nakit > 0)
+{
+    <p>
+        Nakit: @ViewBag.Nakit
+    </p>
+}
+@if (@ViewBag.Kart > 0)
+{
+    <p>
+        Nakit: @ViewBag.Kart
+    </p>
+}
+@if (@ViewBag.Havale > 0)
+{
+    <p>
+        Nakit: @ViewBag.Havale
+    </p>
+}
+<p>
+    Toplam: @ViewBag.Toplam
+</p>
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayName("Tarih")
-            </th>
             <th>
                 @Html.DisplayName("Ürünler")
             </th>
@@ -34,15 +55,15 @@
             <th>
                 @Html.DisplayName("Not")
             </th>
+            <th>
+                @Html.DisplayName("Tarih")
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @item.OrderDate.ToShortDateString()
-            </td>
             <td>
                 @for(int i = 0; i < item.ProductNames.Count();i++)
                 {
@@ -64,6 +85,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @item.OrderDate.ToShortDateString()
             </td>
             <td>
                     <a asp-action="Edit" asp-route-id="@item.OrderId">Satışı Düzenle</a>
