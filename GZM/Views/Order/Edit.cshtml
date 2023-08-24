@@ -11,11 +11,8 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="OrderId" />
-            <div class="form-group">
-                <label asp-for="OrderDate" class="control-label">Tarih</label>
-                <input asp-for="OrderDate" type="date" class="form-control" />
-                <span asp-validation-for="OrderDate" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="OrderDate" value="@Model.OrderDate" />
+            <label>@Model.OrderDate.ToString("dd.MM.yyyy")</label>
             <div class="form-group">
                 <label asp-for="ProductIds" class="control-label">Ürünler</label>
                 <select asp-for="ProductIds" asp-items="ViewBag.Products" id="selectProducts" class="form-control" multiple="multiple"></select>
