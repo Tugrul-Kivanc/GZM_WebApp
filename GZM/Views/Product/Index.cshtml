@@ -9,20 +9,32 @@
 <p>
     <a asp-action="Create">Yeni Ürün Ekle</a>
 </p>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <select name="categoryId" class="form-control" asp-items="ViewBag.CategoryId">
+                <option value="">Kategori</option>
+            </select>
+            <input type="submit" value="Filtrele" class="btn btn-secondary" />
+        </p>
+    </div>
+</form>
+
 <table class="table table-bordered"> @*TODO optionally display full name of perfumes*@
     <thead>
         <tr>
             <th>
-                @Html.DisplayName("Id")
+                <a asp-action="Index" asp-route-sortBy="@ViewBag.IdSort">@Html.DisplayName("Id")</a>
             </th>
             <th>
                 @Html.DisplayName("Ürün")
             </th>
             <th>
-                @Html.DisplayName("Stok")
+                <a asp-action="Index" asp-route-sortBy="@ViewBag.StockSort">@Html.DisplayName("Stok")</a>
             </th>
             <th>
-                @Html.DisplayName("Satış")
+                <a asp-action="Index" asp-route-sortBy="@ViewBag.SalesSort">@Html.DisplayName("Satış")</a>
             </th>
         </tr>
     </thead>

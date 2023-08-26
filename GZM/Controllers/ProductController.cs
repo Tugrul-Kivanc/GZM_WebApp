@@ -7,16 +7,52 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DatabaseModel.Models;
 using GZM.ViewModels;
+using Microsoft.Data.SqlClient;
 
 namespace GZM.Controllers
 {
     public class ProductController : ControllerBase
     {
         // GET: Product
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int? categoryId, string? sortBy)
         {
-            var products = _context.Products.Include(p => p.Category).Include(p => p.Perfume).OrderBy(a => a.CategoryId).OrderBy(b => b.ProductId);
-            return View(await products.ToListAsync());
+            CreateCategoryViewData();
+
+            ViewData["IdSort"] = String.IsNullOrEmpty(sortBy) ? "id_desc" : "";
+            ViewData["StockSort"] = sortBy == "stock" ? "stock_desc" : "stock";
+            ViewData["SalesSort"] = sortBy == "sales" ? "sales_desc" : "sales";
+
+            var products = _context.Products.Include(p => p.Category).Include(p => p.Perfume).ToList();
+            // TODO fix tolist
+            // TODO both filtering & sorting noto working together
+            switch(sortBy)
+            {
+                case "stock":
+                    products = products.OrderByDescending(a => a.Stock).ToList();
+                    break;
+                case "sales":
+                    products = products.OrderByDescending(a => a.TotalSales).ToList();
+                    break;
+                case "id_desc":
+                    products = products.OrderByDescending(a => a.CategoryId).ThenByDescending(b => b.ProductId).ToList();
+                    break;
+                case "stock_desc":
+                    products = products.OrderBy(a => a.Stock).ToList();
+                    break;
+                case "sales_desc":
+                    products = products.OrderBy(a => a.TotalSales).ToList();
+                    break;
+                default:
+                    products = products.OrderBy(a => a.CategoryId).ThenBy(b => b.ProductId).ToList();
+                    break;
+            }
+
+            if(categoryId != null)
+            {
+                products = products.Where(a => a.CategoryId == categoryId).ToList();
+            }
+
+            return View(products);
         }
 
         // GET: Product/Create
