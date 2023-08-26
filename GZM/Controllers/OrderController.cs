@@ -16,18 +16,24 @@ namespace GZM.Controllers
         private int pageSize = 50;
 
         // GET: Order
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(DateTime? date, int page = 1)
         {
             if(_context.Orders == null)
             {
                 return Problem("Entity set 'GzmdatabaseContext.Orders'  is null.");
             }
 
-            ViewData["Date"] = DateTime.Now.Date.ToShortDateString();
-            ViewData["Nakit"] = _context.Orders.Where(a => a.OrderDate.Date == DateTime.Today.Date && a.Payment == "Nakit").Sum(b => b.Fee);
-            ViewData["Kart"] = _context.Orders.Where(a => a.OrderDate.Date == DateTime.Today.Date && a.Payment == "Kart").Sum(b => b.Fee);
-            ViewData["Havale"] = _context.Orders.Where(a => a.OrderDate.Date == DateTime.Today.Date && a.Payment == "Havale").Sum(b => b.Fee);
-            ViewData["Toplam"] = _context.Orders.Where(a => a.OrderDate.Date == DateTime.Today.Date).Sum(b => b.Fee);
+            var dateSearch = DateTime.Today.Date;
+            if(date != null)
+            {
+                dateSearch = date.Value.Date;
+            }
+
+            ViewData["Date"] = dateSearch.Date.ToShortDateString();
+            ViewData["Nakit"] = _context.Orders.Where(a => a.OrderDate.Date == dateSearch && a.Payment == "Nakit").Sum(b => b.Fee);
+            ViewData["Kart"] = _context.Orders.Where(a => a.OrderDate.Date == dateSearch && a.Payment == "Kart").Sum(b => b.Fee);
+            ViewData["Havale"] = _context.Orders.Where(a => a.OrderDate.Date == dateSearch && a.Payment == "Havale").Sum(b => b.Fee);
+            ViewData["Toplam"] = _context.Orders.Where(a => a.OrderDate.Date == dateSearch).Sum(b => b.Fee);
 
             var orders = _context.Orders.Select(a => new ListOrderViewModel()
             {
@@ -38,7 +44,7 @@ namespace GZM.Controllers
                 Payment = a.Payment,
                 ProductNames = _context.ProductOrders.Where(b => b.OrderId == a.OrderId).Select(c => c.Product.Name).ToList(),
                 ProductCount = a.ProductOrders.Select(b => b.Quantity).Sum()
-            }).OrderByDescending(b => b.OrderDate).ThenByDescending(c => c.OrderId).ToPagedListAsync(page, pageSize);
+            }).Where(a => a.OrderDate.Date == dateSearch).OrderByDescending(b => b.OrderDate).ThenByDescending(c => c.OrderId).ToPagedListAsync(page, pageSize);
 
             return View(await orders);
         }
