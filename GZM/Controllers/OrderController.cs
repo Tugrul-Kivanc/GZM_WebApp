@@ -29,6 +29,8 @@ namespace GZM.Controllers
                 dateSearch = date.Value.Date;
             }
 
+            ViewData["SelectedDate"] = dateSearch;
+
             ViewData["Date"] = dateSearch.Date.ToShortDateString();
             ViewData["Nakit"] = _context.Orders.Where(a => a.OrderDate.Date == dateSearch && a.Payment == "Nakit").Sum(b => b.Fee);
             ViewData["Kart"] = _context.Orders.Where(a => a.OrderDate.Date == dateSearch && a.Payment == "Kart").Sum(b => b.Fee);
