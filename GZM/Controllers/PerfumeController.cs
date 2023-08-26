@@ -12,11 +12,21 @@ namespace GZM.Controllers
     public class PerfumeController : ControllerBase
     {
         // GET: Perfume
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string? gender, string?[] kokular)
         {
-              return _context.Perfumes != null ? 
-                          View(await _context.Perfumes.ToListAsync()) :
-                          Problem("Entity set 'GzmdatabaseContext.Perfumes'  is null.");
+            if(_context.Perfumes == null)
+            {
+                return NotFound();
+            }
+
+            var perfumes = _context.Perfumes.ToList();
+            if (gender != null)
+            {
+                perfumes = perfumes.Where(a => a.Gender == gender || a.Gender == "Unisex").ToList();
+            }
+
+            CreateGenderViewData();
+            return View(perfumes);
         }
 
         // GET: Perfume/Create

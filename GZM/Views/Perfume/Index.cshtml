@@ -9,6 +9,18 @@
 <p>
     <a asp-action="Create">Yeni Parfüm Ekle</a>
 </p>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <select name="gender" class="form-control" asp-items="ViewBag.Genders">
+                <option value=""></option>
+            </select>
+            <input type="submit" value="Ara" class="btn btn-default" />
+        </p>
+    </div>
+</form>
+
 <table class="table table-bordered">
     <thead>
         <tr>
