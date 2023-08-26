@@ -44,9 +44,16 @@ namespace GZM.Controllers
                 Payment = a.Payment,
                 ProductNames = _context.ProductOrders.Where(b => b.OrderId == a.OrderId).Select(c => c.Product.Name).ToList(),
                 ProductCount = a.ProductOrders.Select(b => b.Quantity).Sum()
-            }).Where(a => a.OrderDate.Date == dateSearch).OrderByDescending(b => b.OrderDate).ThenByDescending(c => c.OrderId).ToPagedListAsync(page, pageSize);
+            });
 
-            return View(await orders);
+            if(date != null)
+            {
+                orders = orders.Where(a => a.OrderDate.Date == dateSearch);
+            }
+            
+            orders = orders.OrderByDescending(b => b.OrderDate).ThenByDescending(c => c.OrderId);
+
+            return View(await orders.ToPagedListAsync(page, pageSize));
         }
 
         // GET: Order/Create

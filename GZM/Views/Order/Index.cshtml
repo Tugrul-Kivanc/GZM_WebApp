@@ -17,14 +17,14 @@
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
         <p>
-            Tarih: <input type="date" name="date" value="@DateTime.Today.Date.ToString("yyy-MM-dd")" />
+            <input type="date" name="date" value="@DateTime.Today.Date.ToString("yyyy-MM-dd")" />
             <input type="hidden" name="page" value="1" />
-            <input type="submit" value="Ara" class="btn btn-default" /> |
-            <a asp-action="Index">Tümü</a>
+            <input type="submit" value="Filtrele" class="btn btn-secondary" />
         </p>
     </div>
 </form>
 
+<p>@DateTime.Today.ToString("dd.MM.yyyy")</p>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -67,7 +67,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                    <a asp-action="Edit" asp-route-id="@item.OrderId">Satışı Düzenle</a>
+                <a asp-action="Edit" asp-route-id="@item.OrderId">Düzenle</a>
             </td>
         </tr>
 }
