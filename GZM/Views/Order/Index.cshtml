@@ -25,30 +25,6 @@
     </div>
 </form>
 
-<p>
-    Tarih: @ViewBag.Date
-</p>
-@if (@ViewBag.Nakit > 0)
-{
-    <p>
-        Nakit: @ViewBag.Nakit
-    </p>
-}
-@if (@ViewBag.Kart > 0)
-{
-    <p>
-        Kart: @ViewBag.Kart
-    </p>
-}
-@if (@ViewBag.Havale > 0)
-{
-    <p>
-        Havale: @ViewBag.Havale
-    </p>
-}
-<p>
-    Toplam: @ViewBag.Toplam
-</p>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -97,6 +73,29 @@
 }
     </tbody>
 </table>
+
+<p>
+@if (@ViewBag.Nakit > 0)
+{
+    
+        <text>Nakit: @ViewBag.Nakit</text>
+        <text>&emsp;</text>
+}
+@if (@ViewBag.Kart > 0)
+{
+        <text>Kart: @ViewBag.Kart</text>
+        <text>&emsp;</text>
+}
+@if (@ViewBag.Havale > 0)
+{
+        <text>Havale: @ViewBag.Havale</text>
+        <text>&emsp;</text>
+}
+</p>
+<p>
+    <text>Toplam: @ViewBag.Toplam</text>
+</p>
+
 
 <link rel="stylesheet" href="~/css/pagedlist.css" asp-append-version="true" runat="server" />
 @Html.PagedListPager((IPagedList)Model,
