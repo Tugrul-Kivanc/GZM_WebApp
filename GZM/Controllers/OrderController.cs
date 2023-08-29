@@ -37,15 +37,15 @@ namespace GZM.Controllers
             ViewData["Havale"] = _context.Orders.Where(a => a.OrderDate.Date == dateSearch && a.Payment == "Havale").Sum(b => b.Fee);
             ViewData["Toplam"] = _context.Orders.Where(a => a.OrderDate.Date == dateSearch).Sum(b => b.Fee);
 
-            var orders = _context.Orders.Select(a => new ListOrderViewModel()
+            var orders = _context.Orders.Include(a => a.ProductOrders).ThenInclude(b => b.Product).Select(c => new ListOrderViewModel()
             {
-                OrderId = a.OrderId,
-                Description = a.Description,
-                Fee = a.Fee,
-                OrderDate = a.OrderDate,
-                Payment = a.Payment,
-                ProductNames = _context.ProductOrders.Where(b => b.OrderId == a.OrderId).Select(c => c.Product.Name).ToList(),
-                ProductCount = a.ProductOrders.Select(b => b.Quantity).Sum()
+                OrderId = c.OrderId,
+                Description = c.Description,
+                Fee = c.Fee,
+                OrderDate = c.OrderDate,
+                Payment = c.Payment,
+                ProductNames = c.ProductOrders.Select(d => d.Product.Name).ToList(),
+                ProductCount = c.ProductOrders.Select(d => d.Quantity).Sum()
             });
 
             if(date != null)
