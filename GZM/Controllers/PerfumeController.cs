@@ -6,27 +6,71 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DatabaseModel.Models;
+using GZM.ViewModels;
 
 namespace GZM.Controllers
 {
     public class PerfumeController : ControllerBase
     {
         // GET: Perfume
-        public IActionResult Index(string? gender, string?[] kokular)
+        public IActionResult Index(string? gender, string? sortBy)
         {
             if(_context.Perfumes == null)
             {
                 return NotFound();
             }
 
-            var perfumes = _context.Perfumes.ToList();
+            ViewData["IdSort"] = String.IsNullOrEmpty(sortBy) ? "id_desc" : "";
+            ViewData["StockSort"] = sortBy == "stock" ? "stock_desc" : "stock";
+            ViewData["SalesSort"] = sortBy == "sales" ? "sales_desc" : "sales";
+
+            var perfumes = _context.Perfumes.Include(a => a.Product).ToList();
             if (gender != null)
             {
                 perfumes = perfumes.Where(a => a.Gender == gender || a.Gender == "Unisex").ToList();
             }
 
             CreateGenderViewData();
-            return View(perfumes);
+
+            var model = perfumes.Select(a => new PerfumeViewModel
+            {
+                Brand = a.Brand,
+                Code = a.Code,
+                Gender = a.Gender,
+                Info = a.Info,
+                Link = a.Link,
+                PerfumeId = a.PerfumeId,
+                ProductId = a.ProductId,
+                Smell = a.Smell,
+                Type = a.Type,
+                Weather = a.Weather,
+                Stock = a.Product.Stock,
+                TotalSales = a.Product.TotalSales
+            });
+
+            switch (sortBy)
+            {
+                case "stock":
+                    model = model.OrderByDescending(a => a.Stock).ToList();
+                    break;
+                case "sales":
+                    model = model.OrderByDescending(a => a.TotalSales).ToList();
+                    break;
+                case "id_desc":
+                    model = model.OrderByDescending(a => a.ProductId).ToList();
+                    break;
+                case "stock_desc":
+                    model = model.OrderBy(a => a.Stock).ToList();
+                    break;
+                case "sales_desc":
+                    model = model.OrderBy(a => a.TotalSales).ToList();
+                    break;
+                default:
+                    model = model.OrderBy(b => b.ProductId).ToList();
+                    break;
+            }
+
+            return View(model);
         }
 
         // GET: Perfume/Create

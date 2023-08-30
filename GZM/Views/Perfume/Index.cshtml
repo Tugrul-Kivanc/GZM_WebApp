@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DatabaseModel.Models.Perfume>
+﻿@model IEnumerable<PerfumeViewModel>
 
 @{
     ViewData["Title"] = "Parfümler";
@@ -25,7 +25,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayName("Id")
+                <a asp-action="Index" asp-route-sortBy="@ViewBag.IdSort">@Html.DisplayName("Id")</a>
             </th>
             <th>
                 @Html.DisplayName("Kod")
@@ -46,7 +46,10 @@
                 @Html.DisplayName("Cinsiyet")
             </th>
             <th>
-                @Html.DisplayName("Silaj")
+                <a asp-action="Index" asp-route-sortBy="@ViewBag.StockSort">@Html.DisplayName("Stok")</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortBy="@ViewBag.SalesSort">@Html.DisplayName("Satış")</a>
             </th>
             <th>
                 @Html.DisplayName("Bilgi")
@@ -85,7 +88,10 @@
                 @Html.DisplayFor(modelItem => item.Gender)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Sillage)
+                @Html.DisplayFor(modelItem => item.Stock)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalSales)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Info)
