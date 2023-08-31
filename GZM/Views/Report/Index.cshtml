@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Aylık Rapor";
+}
+
+<h1>Aylık Rapor</h1>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <input type="month" name="date" value="@ViewBag.SelectedDate.ToString("yyyy-MM")" />
+            <input type="submit" value="Filtrele" class="btn btn-secondary" />
+        </p>
+    </div>
+</form>
+
+<p>
+    Nakit: @ViewBag.MonthlyCash
+</p>
+<p>
+    Kart: @ViewBag.MonthlyCard
+</p>
+<p>
+    Havale: @ViewBag.MonthlyTransfer
+</p>
+<p>
+    Toplam: @ViewBag.MonthlySum
+</p>
