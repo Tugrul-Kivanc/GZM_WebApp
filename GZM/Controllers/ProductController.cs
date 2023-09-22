@@ -70,6 +70,7 @@ namespace GZM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductId,Name,Stock,TotalSales,CategoryId,PerfumeId")] Product product)
         {
+            ModelState.Remove("Category");
             if (ModelState.IsValid)
             {
                 _context.Add(product);
