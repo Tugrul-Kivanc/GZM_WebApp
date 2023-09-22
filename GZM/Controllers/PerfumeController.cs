@@ -44,8 +44,8 @@ namespace GZM.Controllers
                 Smell = a.Smell,
                 Type = a.Type,
                 Weather = a.Weather,
-                Stock = a.Product.Stock,
-                TotalSales = a.Product.TotalSales
+                Stock = _context.Products.Where(b => b.ProductId == a.ProductId).Select(c => c.Stock).Single(),
+                TotalSales = _context.Products.Where(b => b.ProductId == a.ProductId).Select(c => c.TotalSales).Single()
             });
 
             switch (sortBy)
