@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DatabaseModel.Models.Equalivent>
+
+@{
+    ViewData["Title"] = "Muadiller";
+}
+
+<h1>Muadiller</h1>
+
+<p>
+    <a asp-action="Create">Yeni Muadil Ekle</a>
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Muadil Marka")
+            </th>
+            <th>
+                @Html.DisplayName("Muadil Kodu")
+            </th>
+            
+            <th>
+                @Html.DisplayName("GZM Kodu")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EqualiventBrand.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Perfume.Code)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EqualiventId">Düzenle</a> |
+                <a asp-action="Delete" asp-route-id="@item.EqualiventId">Sil</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
