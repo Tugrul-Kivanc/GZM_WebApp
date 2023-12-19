@@ -23,7 +23,7 @@ namespace GZM.Controllers
             monthlyCard = _context.Orders.Where(a => a.OrderDate.Month == date.Value.Month && a.OrderDate.Year == date.Value.Year && a.Payment == "Kart").Select(b => b.Fee).Sum();
             monthlyTransfer = _context.Orders.Where(a => a.OrderDate.Month == date.Value.Month && a.OrderDate.Year == date.Value.Year && a.Payment == "Havale").Select(b => b.Fee).Sum();
             monthlyTrendyol = _context.Orders.Where(a => a.OrderDate.Month == date.Value.Month && a.OrderDate.Year == date.Value.Year && a.Payment == "Trendyol").Select(b => b.Fee).Sum();
-            monthlyHepsiburada = _context.Orders.Where(a => a.OrderDate.Month == date.Value.Month && a.OrderDate.Year == date.Value.Year && a.Payment == "Hepsiburada").Select(b => b.Fee).Sum();
+            monthlyHepsiburada = _context.Orders.Where(a => a.OrderDate.Month == date.Value.Month && a.OrderDate.Year == date.Value.Year && a.Payment == "Hepsibrd").Select(b => b.Fee).Sum();
             monthlySum = monthlyCash + monthlyCard + monthlyTransfer + monthlyTrendyol + monthlyHepsiburada;
 
             ViewData["SelectedDate"] = date;
